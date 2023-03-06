@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Annotation Tool</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
+    <style>
+        #canvas-container, #image-list {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            position: relative;
+        }
+        canvas {
+            border: 1px solid black;
+        }
+        #annotation-controls, #zoom-controls {
+            margin-top: 20px;
+        }
+        .annotation-option, .image-option {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Annotation Tool</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <!-- Updated to accept multiple files -->
+        <input type="file" name="images[]" id="image-input" multiple>
+        <input type="submit" value="Upload Images">
+    </form>
+
+    <!-- List of Uploaded Images -->
+    <div id="image-list">
+        <h3>Uploaded Images:</h3>
+        <ul id="uploaded-images"></ul>
+    </div>
+
+    <!-- Canvas Container for displaying and annotating images -->
+    <div id="canvas-container">
+        <canvas id="annotation-canvas"></canvas>
+    </div>
+
+    <!-- Zoom Controls -->
+    <div id="zoom-controls">
+        <h3>Zoom Controls:</h3>
+        <button id="zoom-in">Zoom In</button>
+        <button id="zoom-out">Zoom Out</button>
+        <button id="reset-zoom">Reset Zoom</button>
+    </div>
+
+    <!-- Annotation Controls -->
+    <div id="annotation-controls">
+        <h3>Annotation Options:</h3>
+        <div class="annotation-option">
+            <label for="annotation-type">Select Annotation Type:</label>
+            <select id="annotation-type">
+                <option value="rectangle">Rectangle</option>
+                <option value="circle">Circle</option>
+                <option value="line">Line</option>
+                <!-- Add more annotation types as needed -->
+            </select>
+            <button id="add-annotation">Add Annotation</button>
+        </div>
+
+        <div class="annotation-option">
+            <label for="color-picker">Annotation Color:</label>
+            <input type="color" id="color-picker" name="color-picker" value="#ff0000">
+        </div>
+
+        <div class="annotation-option">
+            <label for="opacity-range">Annotation Opacity:</label>
+            <input type="range" id="opacity-range" name="opacity-range" min="0" max="1" step="0.1" value="1">
+        </div>
+
+        <div class="annotation-option">
+            <button id="save-annotation">Save Annotation</button>
+        </div>
+    </div>
+
+    <script>
+        let canvas = new fabric.Canvas('annotation-canvas', {
+            preserveObjectStacking: true
+        });
+        let uploadedImages = [];
+        let currentImageIndex = -1;
+
+        // Function to display an image on the canvas
+        function displayImageOnCanvas(imageFile) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                fabric.Image.fromURL(event.target.result, function(img) {
+                    const maxDimensions = { width: 800, height: 600 };
+                    const scalingFactor = Math.min(
+                        maxDimensions.width / img.width,
+                        maxDimensions.height / img.height,
+                        1 // Ensure the image is not scaled up
+                    );
+
+                    canvas.setDimensions({
+                        width: img.width * scalingFactor,
+                        height: img.height * scalingFactor
+                    });
+                    canvas.clear();
+
+                    img.set({
+                        scaleX: scalingFactor,
+                        scaleY: scalingFactor,
+                        selectable: false,
+                        evented: false,
+                    });
+
+                    canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+                });
+            };
+            reader.readAsDataURL(imageFile);
+        }
+
+        // Handle image file selection
+        document.getElementById('image-input').addEventListener('change', function(e) {
+            uploadedImages = Array.from(e.target.files);
+            currentImageIndex = 0;
+            displayImageOnCanvas(uploadedImages[0]);
+            updateImageList();
+        });
+
+        // Update the list of uploaded images
+        function updateImageList() {
+            const list = document.getElementById('uploaded-images');
+            list.innerHTML = '';
+            uploadedImages.forEach((file, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = file.name;
+                listItem.addEventListener('click', () => {
+                    currentImageIndex = index;
+                    displayImageOnCanvas(file);
+                });
+                list.appendChild(listItem);
+            });
+        }
+
+        // Add annotation based on selected type
+        document.getElementById('add-annotation').addEventListener('click', function() {
+            // ... existing code for adding annotations ...
+        });
+
+        // Save Annotation Functionality
+        document.getElementById('save-annotation').addEventListener('click', function() {
+            // ... existing code for saving annotations ...
+        });
+
+        // Zoom Controls
+        document.getElementById('zoom-in').addEventListener('click', function() {
+            canvas.setZoom(canvas.getZoom() * 1.1); // Zoom in by 10%
+        });
+
+        document.getElementById('zoom-out').addEventListener('click', function() {
+            canvas.setZoom(canvas.getZoom() / 1.1); // Zoom out by 10%
+        });
+
+        document.getElementById('reset-zoom').addEventListener('click', function() {
+            canvas.setViewportTransform([1, 0, 0, 1, 0, 0]); // Reset zoom
+        });
+        // Global variable to hold the current annotation
+        let currentAnnotation = null;
+
+        // Function to handle adding annotations
+        function addAnnotation(annotation) {
+            canvas.add(annotation);
+            currentAnnotation = annotation; // Keep track of the current annotation
+        }
+
+        // Apply Annotation Functionality
+        document.getElementById('apply-annotation').addEventListener('click', function() {
+            if (currentAnnotation) {
+                currentAnnotation.selectable = false;
+                currentAnnotation.evented = false;
+                canvas.renderAll();
+                currentAnnotation = null; // Reset the current annotation
+            }
+        });
+
+        // Update the existing annotation adding functionality
+        document.getElementById('add-annotation').addEventListener('click', function() {
+            // ... existing code for creating annotations ...
+            // Replace canvas.add(annotation) with addAnnotation(annotation)
+            addAnnotation(annotation);
+        });
+
+    </script>
+</body>
+</html>
