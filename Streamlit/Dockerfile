@@ -19,4 +19,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8501
 
 # Run Object_detection_App.py when the container launches
-CMD ["streamlit", "run", "Object_detection_App.py"]
+CMD ["streamlit", "run", "face_detection_with_yolov5.py"]
