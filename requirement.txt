@@ -28,3 +28,7 @@ diffusers
 gradio
 openai
 accelerate
+streamlit
+torch
+pillow
+opencv-python
