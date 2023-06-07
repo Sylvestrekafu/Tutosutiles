@@ -1,5 +1,7 @@
 import streamlit as st
-import torch
+#import torch
+import torchvision
+from torchvision import*
 from PIL import Image
 import cv2
 @st.cache_resource
