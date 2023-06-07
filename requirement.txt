@@ -29,6 +29,7 @@ gradio
 openai
 accelerate
 streamlit
-torch
+torchvision
+
 pillow
 opencv-python
