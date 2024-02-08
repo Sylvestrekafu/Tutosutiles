@@ -3,7 +3,7 @@ import torch  # Deep learning framework
 from PIL import Image, ImageDraw, ImageFont  # Image processing library
 import numpy as np  # Numerical operations library
 
-@st.cache_resource()
+
 def load_model(model_name):
     """
     Charge une version spécifique de YOLOv5 à partir des fichiers de poids locaux.
@@ -46,9 +46,13 @@ def run_detection_image(model, img, conf_threshold, iou_threshold):
     Returns:
     results: The detection results containing bounding boxes, classes, and scores.
     """
+    if model is None:
+        st.error("Le modèle n'a pas pu être chargé.")
+        return None
+
     model.conf = conf_threshold  # Set confidence threshold
-    model.iou = iou_threshold    # Set IoU threshold
-    results = model(img, size=640)
+    model.iou = iou_threshold  # Set IoU threshold
+    results = model(img)
     return results
 
 def draw_boxes(img, detections, box_color, box_width, class_names):
