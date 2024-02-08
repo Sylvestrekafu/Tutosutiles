@@ -14,7 +14,10 @@ def load_model(model_name):
     Returns:
     model: The loaded YOLOv5 model.
     """
-    model = torch.hub.load('ultralytics/yolov5', model_name, pretrained=True)
+    try:
+        model = torch.hub.load('ultralytics/yolov5', model_name, pretrained=True)
+    except Exception as e:
+        print(f"Erreur lors du chargement du modèle : {e}")
     return model
 
 def run_detection_image(model, img, conf_threshold, iou_threshold):
