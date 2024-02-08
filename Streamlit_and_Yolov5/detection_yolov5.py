@@ -3,7 +3,7 @@ import torch  # Deep learning framework
 from PIL import Image, ImageDraw, ImageFont  # Image processing library
 import numpy as np  # Numerical operations library
 
-
+@st.cache_resource()
 def load_model(model_name):
     """
     Charge une version spécifique de YOLOv5 à partir des fichiers de poids locaux.
@@ -15,6 +15,7 @@ def load_model(model_name):
     model: Le modèle YOLOv5 chargé.
     """
     # Chemins vers les fichiers de poids locaux
+
     weights_paths = {
         "n": "yolov5n.pt",  # Mettez à jour avec le chemin réel
         "s": "yolov5s.pt",  # Mettez à jour avec le chemin réel
