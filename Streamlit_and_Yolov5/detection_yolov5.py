@@ -16,25 +16,23 @@ def load_model(model_name):
     """
     # Chemins vers les fichiers de poids locaux
     weights_paths = {
-        "n": "/mnt/data/yolov5n.pt",
-        "s": "/mnt/data/yolov5s.pt",
-        "m": "/mnt/data/yolov5m.pt"
+        "n": "yolov5n.pt",  # Mettez à jour avec le chemin réel
+        "s": "yolov5s.pt",  # Mettez à jour avec le chemin réel
+        "m": "yolov5m.pt"   # Mettez à jour avec le chemin réel
     }
 
     weights_path = weights_paths[model_name]
 
-    # Charger l'architecture du modèle sans les poids pré-entraînés
-    model = torch.hub.load('ultralytics/yolov5', f'yolov5{model_name}', pretrained=False)
+
 
     try:
-        # Charger les poids à partir du fichier .pt
-        model.load_state_dict(torch.load(weights_path, map_location=torch.device('cpu'))['model'].state_dict())
+        # Charger le modèle avec les poids personnalisés
+        model = torch.hub.load('ultralytics/yolov5', 'custom', path=weights_path, force_reload=True)
     except Exception as e:
         st.error(f"Erreur lors du chargement des poids du modèle : {e}")
         model = None
 
     return model
-
 def run_detection_image(model, img, conf_threshold, iou_threshold):
     """
     Runs object detection on an image using the specified YOLOv5 model.
