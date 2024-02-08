@@ -121,7 +121,10 @@ def main():
             st.image(image, caption=f"Uploaded Image: {uploaded_file.name}", use_column_width=True)
 
             # Run detection and draw boxes on the image
-            results = run_detection_image(model, np.array(image), conf_threshold, iou_threshold)
+            img_array = np.array(image)
+            results = run_detection_image(model, img_array, conf_threshold, iou_threshold)
+
+            #results = run_detection_image(model, np.array(image), conf_threshold, iou_threshold)
             if results.xyxy[0].numel() == 0:  # Check if there are any detections
                 st.write("No detections.")
             else:
