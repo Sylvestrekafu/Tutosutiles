@@ -6,18 +6,33 @@ import numpy as np  # Numerical operations library
 @st.cache_resource()
 def load_model(model_name):
     """
-    Loads a specified YOLOv5 model from the ultralytics repository.
+    Charge une version spécifique de YOLOv5 à partir des fichiers de poids locaux.
 
     Args:
-    model_name (str): Name of the YOLOv5 model to load (e.g., 'yolov5s', 'yolov5m', 'yolov5l', 'yolov5x').
+    model_name (str): Nom de la version du modèle YOLOv5 à charger ('n', 's', 'm').
 
     Returns:
-    model: The loaded YOLOv5 model.
+    model: Le modèle YOLOv5 chargé.
     """
+    # Chemins vers les fichiers de poids locaux
+    weights_paths = {
+        "n": "/mnt/data/yolov5n.pt",
+        "s": "/mnt/data/yolov5s.pt",
+        "m": "/mnt/data/yolov5m.pt"
+    }
+
+    weights_path = weights_paths[model_name]
+
+    # Charger l'architecture du modèle sans les poids pré-entraînés
+    model = torch.hub.load('ultralytics/yolov5', f'yolov5{model_name}', pretrained=False)
+
     try:
-        model = torch.hub.load('ultralytics/yolov5', model_name, pretrained=True)
+        # Charger les poids à partir du fichier .pt
+        model.load_state_dict(torch.load(weights_path, map_location=torch.device('cpu'))['model'].state_dict())
     except Exception as e:
-        print(f"Erreur lors du chargement du modèle : {e}")
+        st.error(f"Erreur lors du chargement des poids du modèle : {e}")
+        model = None
+
     return model
 
 def run_detection_image(model, img, conf_threshold, iou_threshold):
@@ -82,7 +97,9 @@ def main():
     st.title("Object Detection with YOLOv5")
 
     # Sidebar options for model selection and thresholds
-    model_choice = st.sidebar.selectbox("Choose YOLOv5 Model", ["yolov5n","yolov5s", "yolov5m"])
+    model_choice = st.sidebar.selectbox("Choisir le modèle YOLOv5", ["n", "s", "m"])
+
+
     conf_threshold = st.sidebar.slider("Confidence Threshold", 0.0, 1.0, 0.25)
     iou_threshold = st.sidebar.slider("IoU Threshold", 0.0, 1.0, 0.45)
 
