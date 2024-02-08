@@ -79,7 +79,7 @@ def main():
     st.title("Object Detection with YOLOv5")
 
     # Sidebar options for model selection and thresholds
-    model_choice = st.sidebar.selectbox("Choose YOLOv5 Model", ["yolov5s", "yolov5m", "yolov5l", "yolov5x"])
+    model_choice = st.sidebar.selectbox("Choose YOLOv5 Model", ["yolov5n","yolov5s", "yolov5m"])
     conf_threshold = st.sidebar.slider("Confidence Threshold", 0.0, 1.0, 0.25)
     iou_threshold = st.sidebar.slider("IoU Threshold", 0.0, 1.0, 0.45)
 
