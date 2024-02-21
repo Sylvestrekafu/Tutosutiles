@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Détection d'Objets avec YOLOv5 et Streamlit
 Ce projet présente une application web interactive construite avec Streamlit qui utilise le modèle d'apprentissage profond YOLOv5 pour la détection d'objets dans des images. Les utilisateurs peuvent télécharger des images, et l'application affichera les images avec des cadres dessinés autour des objets détectés, accompagnés de leurs noms de classes et scores de confiance.
 
@@ -44,3 +45,6 @@ Licence
 Ce projet est ouvert sous la Licence MIT
 
 Profitez de l'exploration de la détection d'objets avec YOLOv5 et Streamlit, et n'hésitez pas à partager vos commentaires ou suggestions pour rendre ce projet encore meilleur !
+=======
+# Tutosutiles
+Display images from multiple cameras simultaneously on the same windows
